@@ -12,17 +12,14 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState({text: '', type: ''})
+  const [notification, setNotification] = useState({ text: '', type: '' })
 
   const blogFormRef = useRef()
 
   useEffect(() => {
     const fetchdata = async () => {
-      try {
-        const blogs = await blogService.getAll()
-        setBlogs(blogs)
-      } catch {
-      }
+      const blogs = await blogService.getAll()
+      setBlogs(blogs)
     }
     fetchdata()
   }, [])
@@ -35,37 +32,37 @@ const App = () => {
     }
   }, [blogs])
 
-  useEffect(() => {    
-    const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')    
-    if (loggedUserJSON) {      
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')
+    if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)     
-      blogService.setToken(user.token)    
-    }  
+      setUser(user)
+      blogService.setToken(user.token)
+    }
   }, [])
 
-  const handleLogin = async (event) => {    
-    event.preventDefault()        
-    try {      
-      const user = await loginService.login({        
-        username, password,      
-      })      
-      setUser(user)      
-      setUsername('')      
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    try {
+      const user = await loginService.login({
+        username, password,
+      })
+      setUser(user)
+      setUsername('')
       setPassword('')
       blogService.setToken(user.token)
-      window.localStorage.setItem(        
-        'loggedBloglistUser', JSON.stringify(user)      
-      ) 
-      setNotification({text: `Logged in as ${user.name}`, type: 'success'})      
-      setTimeout(() => {        
-        setNotification({text: '', type: ''})      
-      }, 5000)  
-    } catch (exception) {      
-      setNotification({text: 'Invalid credentials', type: 'error'})      
-      setTimeout(() => {        
-        setNotification({text: '', type: ''})      
-      }, 5000)  
+      window.localStorage.setItem(
+        'loggedBloglistUser', JSON.stringify(user)
+      )
+      setNotification({ text: `Logged in as ${user.name}`, type: 'success' })
+      setTimeout(() => {
+        setNotification({ text: '', type: '' })
+      }, 5000)
+    } catch (exception) {
+      setNotification({ text: 'Invalid credentials', type: 'error' })
+      setTimeout(() => {
+        setNotification({ text: '', type: '' })
+      }, 5000)
     }
   }
 
@@ -87,31 +84,29 @@ const App = () => {
       const createdBlog = await blogService.create(blog)
       blogFormRef.current.toggleVisibility()
       setBlogs(blogs.concat(createdBlog))
-      setNotification({text: `Added a new blog: ${blog.title} by ${blog.author}`, type: 'success'})      
-      setTimeout(() => {        
-        setNotification({text: '', type: ''})
+      setNotification({ text: `Added a new blog: ${blog.title} by ${blog.author}`, type: 'success' })
+      setTimeout(() => {
+        setNotification({ text: '', type: '' })
       }, 5000)
     } catch {
-      setNotification({text: 'Adding blog failed', type: 'error'})      
-      setTimeout(() => {        
-        setNotification({text: '', type: ''})
+      setNotification({ text: 'Adding blog failed', type: 'error' })
+      setTimeout(() => {
+        setNotification({ text: '', type: '' })
       }, 5000)
     }
   }
 
   const handleLike = async (event) => {
-    try {
-      const id = event.target.id
-      const index = blogs.findIndex(b => b.id === id)
-      const blog = blogs[index]
-      const likedBlog = {...blog, likes: blog.likes + 1}
-      console.log(likedBlog)
-      const updatedBlog = await blogService.update(likedBlog, likedBlog.id)
-      console.log(updatedBlog)
-      const copy = [...blogs]
-      copy[index] = updatedBlog
-      setBlogs(copy)
-    } catch {}
+    const id = event.target.id
+    const index = blogs.findIndex(b => b.id === id)
+    const blog = blogs[index]
+    const likedBlog = { ...blog, likes: blog.likes + 1 }
+    console.log(likedBlog)
+    const updatedBlog = await blogService.update(likedBlog, likedBlog.id)
+    console.log(updatedBlog)
+    const copy = [...blogs]
+    copy[index] = updatedBlog
+    setBlogs(copy)
   }
 
   const handleDelete = async (event) => {
@@ -120,14 +115,14 @@ const App = () => {
       try {
         await blogService.remove(blog.id)
         setBlogs(blogs.filter(b => b.id !== blog.id))
-        setNotification({text: `Removed ${blog.title} by ${blog.author}`, type: 'success'})
+        setNotification({ text: `Removed ${blog.title} by ${blog.author}`, type: 'success' })
         setTimeout(() => {
-          setNotification({text: '', type: ''})
+          setNotification({ text: '', type: '' })
         }, 5000)
       } catch {
-        setNotification({text: `${blog.title} is already removed from the server`, type: 'error'})
+        setNotification({ text: `${blog.title} is already removed from the server`, type: 'error' })
         setTimeout(() => {
-          setNotification({text: '', type: ''})
+          setNotification({ text: '', type: '' })
         }, 5000)
       }
     }
@@ -135,11 +130,11 @@ const App = () => {
 
   if (user === null){
     return (
-      <LoginForm 
-        username={username} 
-        password={password} 
-        onLogin={handleLogin} 
-        onPasswordChange={handlePasswordChange} 
+      <LoginForm
+        username={username}
+        password={password}
+        onLogin={handleLogin}
+        onPasswordChange={handlePasswordChange}
         onUsernameChange={handleUsernameChange}
       />
     )
