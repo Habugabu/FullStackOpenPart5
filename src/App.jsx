@@ -27,6 +27,14 @@ const App = () => {
     fetchdata()
   }, [])
 
+  useEffect(() => {
+    const blogsCopy = [...blogs]
+    blogsCopy.sort((a, b) => b.likes - a.likes)
+    if (JSON.stringify(blogs) !== JSON.stringify(blogsCopy)){
+      setBlogs(blogsCopy)
+    }
+  }, [blogs])
+
   useEffect(() => {    
     const loggedUserJSON = window.localStorage.getItem('loggedBloglistUser')    
     if (loggedUserJSON) {      
