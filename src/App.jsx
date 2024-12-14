@@ -91,6 +91,21 @@ const App = () => {
     }
   }
 
+  const handleLike = async (event) => {
+    try {
+      const id = event.target.id
+      const index = blogs.findIndex(b => b.id === id)
+      const blog = blogs[index]
+      const likedBlog = {...blog, likes: blog.likes + 1}
+      console.log(likedBlog)
+      const updatedBlog = await blogService.update(likedBlog, likedBlog.id)
+      console.log(updatedBlog)
+      const copy = [...blogs]
+      copy[index] = updatedBlog
+      setBlogs(copy)
+    } catch {}
+  }
+
   if (user === null){
     return (
       <LoginForm 
@@ -112,7 +127,7 @@ const App = () => {
         <BlogForm addBlog={addBlog}/>
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} onLike={handleLike} />
       )}
     </div>
   )
