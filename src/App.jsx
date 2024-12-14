@@ -114,6 +114,25 @@ const App = () => {
     } catch {}
   }
 
+  const handleDelete = async (event) => {
+    const blog = blogs.find(b => b.id === event.target.id)
+    if(confirm(`Delete ${blog.title} by ${blog.author}?`)){
+      try {
+        await blogService.remove(blog.id)
+        setBlogs(blogs.filter(b => b.id !== blog.id))
+        setNotification({text: `Removed ${blog.title} by ${blog.author}`, type: 'success'})
+        setTimeout(() => {
+          setNotification({text: '', type: ''})
+        }, 5000)
+      } catch {
+        setNotification({text: `${blog.title} is already removed from the server`, type: 'error'})
+        setTimeout(() => {
+          setNotification({text: '', type: ''})
+        }, 5000)
+      }
+    }
+  }
+
   if (user === null){
     return (
       <LoginForm 
@@ -135,7 +154,7 @@ const App = () => {
         <BlogForm addBlog={addBlog}/>
       </Togglable>
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} onLike={handleLike} />
+        <Blog key={blog.id} user={user} blog={blog} onLike={handleLike} onDelete={handleDelete}/>
       )}
     </div>
   )
