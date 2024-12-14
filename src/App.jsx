@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -12,6 +13,8 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
   const [notification, setNotification] = useState({text: '', type: ''})
+
+  const blogFormRef = useRef()
 
   useEffect(() => {
     const fetchdata = async () => {
@@ -71,8 +74,21 @@ const App = () => {
     setPassword(event.target.value)
   }
 
-  const addBlog = (blog) => {
-    setBlogs(blogs.concat(blog))
+  const addBlog = async (blog) => {
+    try {
+      const createdBlog = await blogService.create(blog)
+      blogFormRef.current.toggleVisibility()
+      setBlogs(blogs.concat(createdBlog))
+      setNotification({text: `Added a new blog: ${blog.title} by ${blog.author}`, type: 'success'})      
+      setTimeout(() => {        
+        setNotification({text: '', type: ''})
+      }, 5000)
+    } catch {
+      setNotification({text: 'Adding blog failed', type: 'error'})      
+      setTimeout(() => {        
+        setNotification({text: '', type: ''})
+      }, 5000)
+    }
   }
 
   if (user === null){
@@ -92,7 +108,9 @@ const App = () => {
       <h2>blogs</h2>
       <Notification text={notification.text} type={notification.type}/>
       <p>{user.name} logged in<button onClick={handleLogout}>log out</button></p>
-      <BlogForm setNotification={setNotification} addBlog={addBlog}/>
+      <Togglable buttonLabel='new blog' ref={blogFormRef}>
+        <BlogForm addBlog={addBlog}/>
+      </Togglable>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}

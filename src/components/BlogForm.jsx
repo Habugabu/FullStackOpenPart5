@@ -1,34 +1,16 @@
 import { useState } from 'react'
-import blogService from '../services/blogs'
 
-const BlogForm = ({setNotification, addBlog}) => {
+const BlogForm = ({addBlog}) => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
 
-    const createBlog = async (event) => {
+    const createBlog = (event) => {
         event.preventDefault()
-        try {
-            const newBlog = {
-                title: title,
-                author: author,
-                url: url
-            }
-            const createdBlog = await blogService.create(newBlog)
-            addBlog(createdBlog)
-            setTitle('')
-            setAuthor('')
-            setUrl('')
-            setNotification({text: `Added a new blog: ${newBlog.title} by ${newBlog.author}`, type: 'success'})      
-            setTimeout(() => {        
-                setNotification({text: '', type: ''})
-            }, 5000)
-        } catch {
-            setNotification({text: 'Adding blog failed (details missing)', type: 'error'})      
-            setTimeout(() => {        
-                setNotification({text: '', type: ''})
-            }, 5000)
-        }
+        addBlog({title, author, url})
+        setTitle('')
+        setAuthor('')
+        setUrl('')
     }
 
     const handleTitleChange = (event) => {
@@ -42,6 +24,7 @@ const BlogForm = ({setNotification, addBlog}) => {
     const handleUrlChange = (event) => {
         setUrl(event.target.value)
     }
+    
     return (
         <div>
             <h2>create new</h2>
