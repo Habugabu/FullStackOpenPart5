@@ -101,9 +101,7 @@ const App = () => {
     const index = blogs.findIndex(b => b.id === id)
     const blog = blogs[index]
     const likedBlog = { ...blog, likes: blog.likes + 1 }
-    console.log(likedBlog)
     const updatedBlog = await blogService.update(likedBlog, likedBlog.id)
-    console.log(updatedBlog)
     const copy = [...blogs]
     copy[index] = updatedBlog
     setBlogs(copy)
