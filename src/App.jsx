@@ -130,13 +130,16 @@ const App = () => {
 
   if (user === null){
     return (
-      <LoginForm
-        username={username}
-        password={password}
-        onLogin={handleLogin}
-        onPasswordChange={handlePasswordChange}
-        onUsernameChange={handleUsernameChange}
-      />
+      <div>
+        <Notification text={notification.text} type={notification.type}/>
+        <LoginForm
+          username={username}
+          password={password}
+          onLogin={handleLogin}
+          onPasswordChange={handlePasswordChange}
+          onUsernameChange={handleUsernameChange}
+        />
+      </div>
     )
   }
 
