@@ -5,7 +5,7 @@ const Blog = ({ user, blog, onLike, onDelete }) => {
 
   const hideWhenVisible = { display: visible ? 'none' : '' }
   const showWhenVisible = { display: visible ? '' : 'none' }
-  const deletable = { display: user.id === blog.user._id ? '' : 'none' }
+  const deletable = { display: user.username === blog.user.username ? '' : 'none' }
 
   const toggleVisibility = () => {
     setVisible(!visible)
