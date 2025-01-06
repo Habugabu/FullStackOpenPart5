@@ -1,30 +1,36 @@
-const LoginForm = ({ onLogin, username, password, onUsernameChange, onPasswordChange }) => {
+const LoginForm = ({
+  onLogin,
+  username,
+  password,
+  onUsernameChange,
+  onPasswordChange,
+}) => {
   return (
     <div>
       <h2>login to application</h2>
       <form onSubmit={onLogin}>
         <div>
-                    username
+          username
           <input
-            type='text'
+            type="text"
             value={username}
-            name='Username'
+            name="Username"
             onChange={onUsernameChange}
           />
         </div>
         <div>
-                    password
+          password
           <input
-            type='text'
+            type="text"
             value={password}
-            name='Password'
+            name="Password"
             onChange={onPasswordChange}
           />
         </div>
-        <button type='submit'>login</button>
+        <button type="submit">login</button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default LoginForm
+export default LoginForm;
