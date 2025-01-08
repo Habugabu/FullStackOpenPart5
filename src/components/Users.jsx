@@ -5,7 +5,6 @@ const Users = ({ blogs }) => {
       acc[curr] = (acc[curr] || 0) + 1;
       return acc;
     }, {});
-  console.log(userCounts);
   return (
     <div>
       <h2>Users</h2>

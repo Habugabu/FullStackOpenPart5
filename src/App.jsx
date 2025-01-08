@@ -9,6 +9,7 @@ import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 import Users from "./components/Users";
+import Menu from "./components/Menu";
 
 import {
   BrowserRouter as Router,
@@ -170,11 +171,9 @@ const App = () => {
 
   return (
     <Router>
-      <h2>blogs</h2>
+      <Menu user={user} onLogout={handleLogout} />
+      <h2>Blog app</h2>
       <Notification />
-      <p>
-        {user.name} logged in<button onClick={handleLogout}>log out</button>
-      </p>
       <Routes>
         <Route
           path="/"
