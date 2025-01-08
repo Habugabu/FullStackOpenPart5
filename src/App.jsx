@@ -8,6 +8,16 @@ import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import Users from "./components/Users";
+
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  useParams,
+  useNavigate,
+} from "react-router-dom";
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -159,25 +169,35 @@ const App = () => {
   }
 
   return (
-    <div>
+    <Router>
       <h2>blogs</h2>
       <Notification />
       <p>
         {user.name} logged in<button onClick={handleLogout}>log out</button>
       </p>
-      <Togglable buttonLabel="new blog" ref={blogFormRef}>
-        <BlogForm addBlog={addBlog} />
-      </Togglable>
-      {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          user={user}
-          blog={blog}
-          onLike={handleLike}
-          onDelete={handleDelete}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <div>
+              <Togglable buttonLabel="new blog" ref={blogFormRef}>
+                <BlogForm addBlog={addBlog} />
+              </Togglable>
+              {blogs.map((blog) => (
+                <Blog
+                  key={blog.id}
+                  user={user}
+                  blog={blog}
+                  onLike={handleLike}
+                  onDelete={handleDelete}
+                />
+              ))}
+            </div>
+          }
         />
-      ))}
-    </div>
+        <Route path="/users" element={<Users blogs={blogs} />} />
+      </Routes>
+    </Router>
   );
 };
 
