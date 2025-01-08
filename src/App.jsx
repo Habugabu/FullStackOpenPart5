@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { useDispatch } from "react-redux";
+import { setNotification } from "./reducers/notificationReducer";
 import Blog from "./components/Blog";
 import LoginForm from "./components/LoginForm";
 import BlogForm from "./components/BlogForm";
@@ -12,7 +14,8 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-  const [notification, setNotification] = useState({ text: "", type: "" });
+
+  const dispatch = useDispatch();
 
   const blogFormRef = useRef();
 
@@ -53,15 +56,16 @@ const App = () => {
       setPassword("");
       blogService.setToken(user.token);
       window.localStorage.setItem("loggedBloglistUser", JSON.stringify(user));
-      setNotification({ text: `Logged in as ${user.name}`, type: "success" });
-      setTimeout(() => {
-        setNotification({ text: "", type: "" });
-      }, 5000);
+      dispatch(
+        setNotification(
+          { text: `Logged in as ${user.name}`, type: "success" },
+          5,
+        ),
+      );
     } catch (exception) {
-      setNotification({ text: "Invalid credentials", type: "error" });
-      setTimeout(() => {
-        setNotification({ text: "", type: "" });
-      }, 5000);
+      dispatch(
+        setNotification({ text: "Invalid credentials", type: "error" }, 5),
+      );
     }
   };
 
@@ -83,18 +87,19 @@ const App = () => {
       const createdBlog = await blogService.create(blog);
       blogFormRef.current.toggleVisibility();
       setBlogs(blogs.concat(createdBlog));
-      setNotification({
-        text: `Added a new blog: ${blog.title} by ${blog.author}`,
-        type: "success",
-      });
-      setTimeout(() => {
-        setNotification({ text: "", type: "" });
-      }, 5000);
+      dispatch(
+        setNotification(
+          {
+            text: `Added a new blog: ${blog.title} by ${blog.author}`,
+            type: "success",
+          },
+          5,
+        ),
+      );
     } catch {
-      setNotification({ text: "Adding blog failed", type: "error" });
-      setTimeout(() => {
-        setNotification({ text: "", type: "" });
-      }, 5000);
+      dispatch(
+        setNotification({ text: "Adding blog failed", type: "error" }, 5),
+      );
     }
   };
 
@@ -115,21 +120,25 @@ const App = () => {
       try {
         await blogService.remove(blog.id);
         setBlogs(blogs.filter((b) => b.id !== blog.id));
-        setNotification({
-          text: `Removed ${blog.title} by ${blog.author}`,
-          type: "success",
-        });
-        setTimeout(() => {
-          setNotification({ text: "", type: "" });
-        }, 5000);
+        dispatch(
+          setNotification(
+            {
+              text: `Removed ${blog.title} by ${blog.author}`,
+              type: "success",
+            },
+            5,
+          ),
+        );
       } catch {
-        setNotification({
-          text: `${blog.title} is already removed from the server`,
-          type: "error",
-        });
-        setTimeout(() => {
-          setNotification({ text: "", type: "" });
-        }, 5000);
+        dispatch(
+          setNotification(
+            {
+              text: `${blog.title} is already removed from the server`,
+              type: "error",
+            },
+            5,
+          ),
+        );
       }
     }
   };
@@ -137,7 +146,7 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        <Notification text={notification.text} type={notification.type} />
+        <Notification />
         <LoginForm
           username={username}
           password={password}
@@ -152,7 +161,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification text={notification.text} type={notification.type} />
+      <Notification />
       <p>
         {user.name} logged in<button onClick={handleLogout}>log out</button>
       </p>
